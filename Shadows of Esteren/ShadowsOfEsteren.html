@@ -412,7 +412,9 @@
 	Base: <input class="sheet-skill-off" type="number" name="attr_Defense" value="@{Reason}+@{Empathy}+5+(@{Penalty})" disabled="true"/>
 	+ Bonus: <input class="sheet-skill-on" type="number" name="attr_DefenseBonus" value="0"/>
 	= <input class="sheet-skill-off" type="number" name="attr_DefenseSum" value="@{Defense}+@{DefenseBonus}" disabled="true"/>
-	Current Defense: <input class="sheet-skill-off" type="number" name="attr_DisplayDefense" value="0"
+	
+	<div class="sheet-header">Current Defense</div>
+	Current Defense: <input class="sheet-skill-off" type="number" name="attr_DisplayDefense" value="0" disabled="true"/>
 	
 	<div class="sheet-header">Speed</div>
 	Base: <input class="sheet-skill-off" type="number" name="attr_Speed" value="@{Combativeness}+@{Empathy}+(@{Penalty})" disabled="true"/>
