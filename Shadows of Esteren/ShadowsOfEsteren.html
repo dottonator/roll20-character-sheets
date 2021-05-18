@@ -370,6 +370,7 @@
 	</fieldset>	
 	<div class="sheet-header-sub">Combat Arts</div>
     <textarea class="sheet-advantages" type="textarea" name="attr_CombatArts"></textarea>
+	Two Weapon Fighting: <input type="checkbox" name="attr_TwoWeaponFighting" value="2">
 	</div>
 </div>
 
@@ -383,7 +384,7 @@
         Spd: <input class="sheet-skill-off" type="number" name="attr_StandardSpeed" value="@{SpeedSum}" disabled="true"/>    
         
 	<div class="sheet-header-sub"><input type="radio" name="attr_Attitude" value="Offensive"/>Offensive - Initiative: <button type='roll' name='roll_Offensive_Initiative' value='&{template:basic} {{name=@{character_name} }} {{subtags=Offensive Attitude}} {{action=Initiative}} {{conf=[[1d10]]}} {{attack=[[1d10+@{OffensiveSpeed}[Speed] &{tracker}]]}}'></button></div>
-        Atk: <input class="sheet-skill-off" type="number" name="attr_OffensiveAttack" value="@{StandardAttack}+@{PotentialSum}" disabled="true"/>
+        Atk: <input class="sheet-skill-off" type="number" name="attr_OffensiveAttack" value="@{StandardAttack}+@{PotentialSum}+@{TwoWeaponFighting}" disabled="true"/>
         <button type='roll' name='roll_Offensive_Attack' value='&{template:basic} {{name=@{character_name} }} {{action=Offensive Attack}} {{conf=[[1d10]]}} {{attack=[[1d10+@{OffensiveAttack}[Attack]+@{Penalty}[Condition Penalty]]]}}'></button>
         Def: <input class="sheet-skill-off" type="number" name="attr_OffensiveDefense" value="@{DefenseSum}-(@{PotentialSum})" disabled="true"/>
         Spd: <input class="sheet-skill-off" type="number" name="attr_OffensiveSpeed" value="@{SpeedSum}" disabled="true"/>	
@@ -391,7 +392,7 @@
     <div class="sheet-header-sub"><input type="radio" name="attr_Attitude" value="Defensive"/>Defensive - Initiative: <button type='roll' name='roll_Defensive_Initiative' value='&{template:basic} {{name=@{character_name} }} {{subtags=Defensive Attitude}} {{action=Initiative}} {{conf=[[1d10]]}} {{attack=[[1d10+@{DefensiveSpeed}[Speed] &{tracker}]]}}'></button></div>
         Atk: <input class="sheet-skill-off" type="number" name="attr_DefensiveAttack" value="@{StandardAttack}-@{PotentialSum}" disabled="true"/>
         <button type='roll' name='roll_Defensive_Attack' value='&{template:basic} {{name=@{character_name} }} {{action=Defensive Attack}} {{conf=[[1d10]]}} {{attack=[[1d10+@{DefensiveAttack}[Attack]+@{Penalty}[Condition Penalty]]]}}'></button>
-        Def: <input class="sheet-skill-off" type="number" name="attr_DefensiveDefense" value="@{DefenseSum}+(@{PotentialSum})" disabled="true"/>
+        Def: <input class="sheet-skill-off" type="number" name="attr_DefensiveDefense" value="@{DefenseSum}+@{TwoWeaponFighting}+(@{PotentialSum})" disabled="true"/>
         Spd: <input class="sheet-skill-off" type="number" name="attr_DefensiveSpeed" value="@{SpeedSum}" disabled="true"/>	
         
 	<div class="sheet-header-sub"><input type="radio" name="attr_Attitude" value="Quick"/>Quick - Initiative: <button type='roll' name='roll_Quick_Initiative' value='&{template:basic} {{name=@{character_name} }} {{subtags=Quick Attitude}} {{action=Initiative}} {{conf=[[1d10]]}} {{attack=[[1d10+@{QuickSpeed}[Speed] &{tracker}]]}}'></button></div>
@@ -411,6 +412,8 @@
 	Base: <input class="sheet-skill-off" type="number" name="attr_Defense" value="@{Reason}+@{Empathy}+5+(@{Penalty})" disabled="true"/>
 	+ Bonus: <input class="sheet-skill-on" type="number" name="attr_DefenseBonus" value="0"/>
 	= <input class="sheet-skill-off" type="number" name="attr_DefenseSum" value="@{Defense}+@{DefenseBonus}" disabled="true"/>
+	Current Defense: <input class="sheet-skill-off" type="number" name="attr_DisplayDefense" value="0"
+	
 	<div class="sheet-header">Speed</div>
 	Base: <input class="sheet-skill-off" type="number" name="attr_Speed" value="@{Combativeness}+@{Empathy}+(@{Penalty})" disabled="true"/>
 	+ Bonus: <input class="sheet-skill-on" type="number" name="attr_SpeedBonus" value="0"/>
@@ -698,6 +701,16 @@ on("change:creativity change:potential", function() {
             Potential: pot
         });
     });
+});
+
+on("change:Attitude", function() {
+	getAttrs(["Attitude", "DisplayDefense", "StandardDefense", "OffensiveDefense", "DefensiveDefense", "QuickDefense", "MovementDefense"], function(values) {
+		if(values.Attitude == 'Standard' ){setAttrs({DisplayDefense: parseInt(values.StandardDefense) });} else
+		if(values.Attitude == 'Offensive' ){setAttrs({DisplayDefense: parseInt(values.OffensiveDefense) });} else        
+		if(values.Attitude == 'Defensive' ){setAttrs({DisplayDefense: parseInt(values.DefensiveDefense) });} else
+		if(values.Attitude == 'Quick' ){setAttrs({DisplayDefense: parseInt(values.QuickDefense) });} else
+		{setAttrs({DisplayDefense: parseInt(values.MovementDefense) });} 
+       });
 });
 
 </script>
